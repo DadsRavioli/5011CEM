@@ -1,58 +1,14 @@
-[X] = 30.15:0.1:69.85; % create X value
-[Y] = -24.85:0.1:44.85;% create Y values
+%Creates our initial window
+fig2 = uifigure("Position", [400 400 280 200]);
 
-Z = ncread('C:\Users\Dads Ravioli\Desktop\Year 3 Work\50011CEMMatlab\data.nc', 'ensemble_ozone');
-%% Create a display of the data from the NetCDF files like this
-[X,Y] = meshgrid(X, Y);
+text2 = uilabel(fig2, "Position", [90 140 120 30], "Text", "Data Sources:");
+box = uibuttongroup(fig2,'Position',[90 60 120 85]);
+nButton = uiradiobutton(box, 'Position', [5 60 120 15], 'Text', 'CBE Data');
 
-figure(1);
-clf
-% Create the map
-worldmap('Europe'); % set the part of the earth to show
-
-load coastlines
-plotm(coastlat,coastlon)
-
-land = shaperead('landareas', 'UseGeoCoords', true);
-geoshow(gca, land, 'FaceColor', [0.5 0.7 0.5])
-
-lakes = shaperead('worldlakes', 'UseGeoCoords', true);
-geoshow(lakes, 'FaceColor', 'blue')
-
-rivers = shaperead('worldrivers', 'UseGeoCoords', true);
-geoshow(rivers, 'Color', 'blue')
-
-cities = shaperead('worldcities', 'UseGeoCoords', true);
-geoshow(cities, 'Marker', '.', 'Color', 'red')
-
-surfm(X, Y, Z, Z, Z, Z, Z, Z, Z, Z, Z, 'EdgeColor', 'none',...
-    'FaceAlpha', 0.5) 
-
-%% Plot contour map
-% [X,Y] = meshgrid(X, Y); % this calculation has been carried out above
-% already
-clf
-
-% creating the map
-worldmap('Europe'); % set the part of the earth to show
-load coastlines
-plotm(coastlat,coastlon)
-
-land = shaperead('landareas', 'UseGeoCoords', true);
-geoshow(gca, land, 'FaceColor', [0.5 0.7 0.5])
-
-lakes = shaperead('worldlakes', 'UseGeoCoords', true);
-geoshow(lakes, 'FaceColor', 'blue')
-
-rivers = shaperead('worldrivers', 'UseGeoCoords', true);
-geoshow(rivers, 'Color', 'blue')
-
-cities = shaperead('worldcities', 'UseGeoCoords', true);
-geoshow(cities, 'Marker', '.', 'Color', 'red')
-
-% display the data
-NumContours = 10;
-contourfm(X, Y, Z, NumContours)
-
-Plots = findobj(gca,'Type','Axes');
-Plots.SortMethod = 'depth';
+%Creates the next button in the UI
+%line 23 triggers the next function when it detects the button has been
+%pushed
+nextBtn = uibutton(fig2,"push",...
+    "Text", "Next",...
+    "Position",[120 20 50 20],...
+    "ButtonPushedFcn", @(btn,event) next(nButton, fig2));
