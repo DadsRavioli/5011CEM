@@ -1,3 +1,13 @@
+global currentHour;
+global play;
+global dataSource;
+global endTime;
+
+endTime = 25;
+
+setHour(1);
+setPlay(true);
+
 %Creates our initial window
 fig2 = uifigure("Position", [400 400 280 200]);
 
@@ -25,7 +35,8 @@ function startFunc()
     
     desc = uilabel(fig,... %Creates the description at the top of the map
         "Position", [90 550 595 30],...
-        "Text", text);   
+        "Text", text);
+    
     loop(fig, n) 
 end
 
@@ -42,4 +53,72 @@ function loop(fig, n)
         pause(0.7); %Creates a 0.7 second pause between changing hours
     end
 end             
+
+function displayHour(currentHour, fig, n)
+[x] = 30.15:0.1:69.85; % create x value
+[y] = -24.85:0.1:44.85; %Create y Value
+   
+[x, y] = meshgrid(x, y); %Create a grid with the lat and long
+
+%Lines 65 to 74 taken from
+%https://cumoodle.coventry.ac.uk/pluginfile.php/3233614/mod_resource/content/2/VisualinationExample.m
+map = worldmap('Europe');
+land = shaperead('landareas', 'UseGeoCoords', true);
+geoshow(gca, land, 'FaceColor', [0.5 0.7 0.5])
+lakes = shaperead('worldlakes', 'UseGeoCoords', true);
+geoshow(lakes, 'FaceColor', 'blue')
+rivers = shaperead('worldrivers', 'UseGeoCoords', true);
+geoshow(rivers, 'Color', 'blue')
+cities = shaperead('worldcities', 'UseGeoCoords', true);
+geoshow(cities, 'Marker', '.', 'Color', 'red')
+
+surfm(x, y, n(:,:,currentHour),'FaceAlpha', 0.5);%Plots the map with the data
+
+mapCopy = copyobj(map, fig);  
+close();                  
+end
+
+function next(nButton, fig)
+    if nButton.Value == 1
+        setDataSource(1)
+    end
+    close(fig);    
+    startFunc()
+end
+
+%Functions to setup Global Variables
+function r = getPlay
+    global play;
+    r = play;
+end
+
+function setPlay(val)
+    global play;
+    play = val;
+end
+
+function r = getHour
+    global currentHour;
+    r = currentHour;
+end
+
+function setHour(val)
+    global currentHour;
+    currentHour = val;
+end
+
+function r = getendTime
+    global endTime;
+    r = endTime;
+end
+
+function r = getDataSource
+    global DataSource;
+    r = DataSource;
+end
+
+function setDataSource(val)
+    global DataSource;
+    DataSource = val;
+end
 
